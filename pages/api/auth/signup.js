@@ -30,7 +30,7 @@ async function signupHandler(req, res) {
       return;
     }
 
-    const hashedPassword = hashPassword(password);
+    const hashedPassword = await hashPassword(password);
 
     const result = await db
       .collection("users")

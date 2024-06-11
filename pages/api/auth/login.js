@@ -1,6 +1,6 @@
 import { connectToDatabase } from "@/pages/lib/db";
 import bcrypt from "bcryptjs";
-
+import jwt from "jsonwebtoken";
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).send({ message: "Only POST requests allowed" });
@@ -8,8 +8,7 @@ export default async function handler(req, res) {
 
   try {
     const { email, password } = req.body;
-    const client = await connectToDatabase();
-    const db = client.db();
+    const { db } = await connectToDatabase();
 
     const user = await db.collection("users").findOne({ email });
     if (!user) {
@@ -21,8 +20,17 @@ export default async function handler(req, res) {
       return res.status(403).send({ message: "Invalid credentials" });
     }
 
-    // Here you would typically issue a token or set a session
-    res.status(200).send({ message: "Login successful" });
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "24h",
+    });
+    console.log("token generated", token);
+
+    res.setHeader(
+      "Set-Cookie",
+      `token=${token}; HttpOnly; Path=/; Max-Age 7200; Secure; Samesite-Strict`
+    );
+
+    res.status(200).json({ message: "Login successful!", token: token });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).send({ message: "Internal server error" });

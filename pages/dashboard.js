@@ -9,8 +9,35 @@ import {
   DocumentDuplicateIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { verifyToken } from "./utils/auth";
+import nookies from "nookies";
 
-function classNames(...classes) {
+export async function getServerSideProps(context) {
+  const cookies = nookies.get(context);
+  const token = cookies.token;
+  console.log("cookies received", cookies);
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: "/authform",
+        permanent: false,
+      },
+    };
+  }
+  const tokenValid = verifyToken(token);
+  if (!tokenValid) {
+    return {
+      redirect: {
+        destination: "/authform",
+        permanent: false,
+      },
+    };
+  }
+  return { props: {} };
+}
+
+export function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
@@ -39,7 +66,7 @@ const navigation = [
   { name: "Feedback", icon: Cog6ToothIcon },
 ];
 
-export default function Example() {
+export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("Dashboard");
 
