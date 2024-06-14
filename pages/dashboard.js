@@ -15,7 +15,6 @@ import nookies from "nookies";
 export async function getServerSideProps(context) {
   const cookies = nookies.get(context);
   const token = cookies.token;
-  console.log("cookies received", cookies);
 
   if (!token) {
     return {

@@ -1,5 +1,5 @@
-import { connectToDatabase } from "@/pages/lib/db";
 import fetch from "node-fetch";
+import { connectToDatabase } from "@/pages/lib/db";
 import cron from "node-cron";
 
 // Fetch job data from API
@@ -14,61 +14,68 @@ async function fetchJobData() {
     },
   };
 
-  try {
-    const response = await fetch(url, options);
-    if (!response.ok)
-      throw new Error(`API call failed with status ${response.status}`);
-    console.log(await response.json());
-  } catch (error) {
-    console.error("Failed to fetch job data:", error);
-    throw error; // Rethrow to handle it in the calling function
-  }
+  const response = await fetch(url, options);
+  if (!response.ok) throw new Error(`HTTP status ${response.status}`);
+  return response.json(); // Assuming the response is JSON
 }
 
-// Store job data in MongoDB
+// Store job data in MongoDB and manage collection size
 async function storeJobData(db, jobs) {
   const collection = db.collection("jobs");
-  const results = [];
-
+  // Upsert jobs
   for (const job of jobs) {
-    const updateResult = await collection.updateOne(
+    await collection.updateOne(
       { job_urn: job.job_urn },
       { $set: job },
       { upsert: true }
     );
-    results.push(updateWebResult);
   }
 
-  return results;
+  // Manage collection size
+  const count = await collection.countDocuments();
+  if (count > 250) {
+    const oldest = await collection
+      .find()
+      .sort({ posted_time: 1 })
+      .limit(50)
+      .toArray();
+    for (const doc of oldest) {
+      await collection.deleteOne({ _id: doc._id });
+    }
+    console.log(
+      `Deleted ${oldest.length} old jobs to maintain collection size.`
+    );
+  }
 }
 
-// Scheduled task to fetch and store jobs
-cron.schedule("0 0 * * *", async () => {
-  try {
-    const db = await connectToDatabase();
-    const jobData = await fetchJobData();
-    const storeResults = await storeJobData(db, jobData);
-    console.log("Job data fetched and stored successfully.", storeResults);
-  } catch (error) {
-    console.error("Error during scheduled job fetch:", error);
-  }
-});
+// Function to be called by cron and the handler
+async function runJobFetchAndStore() {
+  const { db } = await connectToDatabase();
+  const jobData = await fetchJobData();
+  await storeJobData(db, jobData.data); // Assuming the jobData contains the array of job listings
+  console.log("Job data fetched and stored successfully");
+}
+
+// Schedule the job fetch and store to run every 24 hours
+cron.schedule("0 0 * * *", runJobFetchAndStore);
 
 export default async function handler(req, res) {
   if (req.method === "GET") {
     try {
-      const db = await connectToDatabase();
-      const jobData = await fetchJobData();
-      const storeResults = await storeJobData(db, jobData);
-      res.status(200).json({
-        message: "Job data fetched and stored successfully.",
-        results: storeResults,
-      });
+      await runJobFetchAndStore();
+      res
+        .status(200)
+        .json({
+          message:
+            "Job data fetching triggered manually and processed successfully.",
+        });
     } catch (error) {
-      res.status(500).json({
-        message: "Failed to process job data",
-        error: error.toString(),
-      });
+      res
+        .status(500)
+        .json({
+          message: "Failed to fetch and store job data",
+          error: error.toString(),
+        });
     }
   } else {
     res.status(405).json({ message: "Method Not Allowed" });
