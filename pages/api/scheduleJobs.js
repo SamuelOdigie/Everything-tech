@@ -1,22 +1,27 @@
 import fetch from "node-fetch";
 import { connectToDatabase } from "@/pages/lib/db";
-import cron from "node-cron";
 
 // Fetch job data from API
 async function fetchJobData() {
   const url =
-    "https://fresh-linkedin-profile-data.p.rapidapi.com/search-jobs?keywords=Software%20developer%20Software%20engineer&geo_code=101165590&date_posted=past_week&sort_by=most_recent&start=0&easy_apply=false&under_10_applicants=false";
+    "https://linkedin-api8.p.rapidapi.com/search-jobs-v2?keywords=software%20engineer%20software%20developer&locationId=101165590&datePosted=pastWeek&sort=mostRecent";
   const options = {
     method: "GET",
     headers: {
       "x-rapidapi-key": process.env.RAPIDAPI_KEY,
-      "x-rapidapi-host": "fresh-linkedin-profile-data.p.rapidapi.com",
+      "x-rapidapi-host": process.env.RAPIDAPI_HOST,
     },
   };
 
-  const response = await fetch(url, options);
-  if (!response.ok) throw new Error(`HTTP status ${response.status}`);
-  return response.json(); // Assuming the response is JSON
+  try {
+    const response = await fetch(url, options);
+    if (!response.ok) throw new Error(`HTTP status ${response.status}`);
+    const data = await response.json(); // Ensure JSON parsing
+    return data; // Directly return the parsed data
+  } catch (error) {
+    console.error("Failed to fetch job data:", error);
+    throw error; // Rethrow the error to handle it in the caller
+  }
 }
 
 // Store job data in MongoDB and manage collection size
@@ -25,7 +30,7 @@ async function storeJobData(db, jobs) {
   // Upsert jobs
   for (const job of jobs) {
     await collection.updateOne(
-      { job_urn: job.job_urn },
+      { job_urn: job.id }, // Assuming job data has an `id` field
       { $set: job },
       { upsert: true }
     );
@@ -48,34 +53,36 @@ async function storeJobData(db, jobs) {
   }
 }
 
-// Function to be called by cron and the handler
+// Function to be called to fetch and store data
 async function runJobFetchAndStore() {
   const { db } = await connectToDatabase();
-  const jobData = await fetchJobData();
-  await storeJobData(db, jobData.data); // Assuming the jobData contains the array of job listings
-  console.log("Job data fetched and stored successfully");
+  try {
+    const jobData = await fetchJobData();
+    if (jobData && jobData.data) {
+      // Check if data is available
+      await storeJobData(db, jobData.data); // Assuming the API returns an object with a data key
+      console.log("Job data fetched and stored successfully");
+    } else {
+      console.log("No job data to store");
+    }
+  } catch (error) {
+    console.error("Error during job data fetch and storage:", error);
+  }
 }
-
-// Schedule the job fetch and store to run every 24 hours
-cron.schedule("0 0 * * *", runJobFetchAndStore);
 
 export default async function handler(req, res) {
   if (req.method === "GET") {
     try {
       await runJobFetchAndStore();
-      res
-        .status(200)
-        .json({
-          message:
-            "Job data fetching triggered manually and processed successfully.",
-        });
+      res.status(200).json({
+        message:
+          "Job data fetching triggered manually and processed successfully.",
+      });
     } catch (error) {
-      res
-        .status(500)
-        .json({
-          message: "Failed to fetch and store job data",
-          error: error.toString(),
-        });
+      res.status(500).json({
+        message: "Failed to fetch and store job data",
+        error: error.toString(),
+      });
     }
   } else {
     res.status(405).json({ message: "Method Not Allowed" });
