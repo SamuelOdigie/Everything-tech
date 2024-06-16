@@ -9,7 +9,7 @@ async function fetchJobData() {
     method: "GET",
     headers: {
       "x-rapidapi-key": process.env.RAPIDAPI_KEY,
-      "x-rapidapi-host": process.env.RAPIDAPI_HOST,
+      "x-rapidapi-host": process.env.RAPIDAPI_HOST_JOBS,
     },
   };
 
