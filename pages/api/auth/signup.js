@@ -2,33 +2,39 @@ import { connectToDatabase } from "@/pages/lib/db";
 import { hashPassword } from "@/pages/lib/auth";
 
 async function signupHandler(req, res) {
-  const data = req.body;
   if (req.method !== "POST") {
     res.status(405).json({ message: "Method Not Allowed" });
     return;
   }
 
-  try {
-    const { email, password } = data;
+  const data = req.body;
+  const { email, password } = data;
 
-    if (
-      !email ||
-      !password ||
-      password.length < 7 ||
-      !email.includes("@") ||
-      !email.includes(".")
-    ) {
-      res.status(400).json({ message: "Invalid email or password." });
+  if (
+    !email ||
+    !password ||
+    password.length < 7 ||
+    !email.includes("@") ||
+    !email.includes(".")
+  ) {
+    res.status(400).json({ message: "Invalid email or password." });
+    return;
+  }
+
+  try {
+    const { db } = await connectToDatabase();
+
+    const existingUser = await db.collection("users").findOne({ email });
+    if (existingUser) {
+      res.status(422).json({ message: "User already exists!" });
       return;
     }
 
-    const client = connectToDatabase();
-    const db = client.db();
-
     const hashedPassword = await hashPassword(password);
+
     const result = await db
       .collection("users")
-      .insertOne({ email: email, password: hashedPassword });
+      .insertOne({ email, password: hashedPassword });
 
     res.status(201).json({ message: "User created successfully." });
   } catch (error) {

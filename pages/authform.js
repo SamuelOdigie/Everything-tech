@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useRouter } from "next/router";
 
 async function createUser(email, password) {
   const res = await fetch("/api/auth/signup", {
@@ -7,7 +8,7 @@ async function createUser(email, password) {
     headers: {
       "Content-Type": "application/json",
     },
-  })
+  });
   const data = await res.json();
   if (!res.ok) {
     throw new Error(data.message || "Something went wrong!");
@@ -15,8 +16,25 @@ async function createUser(email, password) {
   return data;
 }
 
+async function loginUser(email, password) {
+  const res = await fetch("/api/auth/login", {
+    method: "POST",
+    body: JSON.stringify({ email, password }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || "Something went wrong!");
+  }
+  return data;
+}
 function AuthForm() {
+  const router = useRouter();
   const [isLogin, setIsLogin] = useState(true);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
 
@@ -24,20 +42,35 @@ function AuthForm() {
     event.preventDefault();
     const enteredEmail = emailInputRef.current.value;
     const enteredPassword = passwordInputRef.current.value;
+
     if (isLogin) {
-      // Log user in
+      try {
+        const result = await (isLogin
+          ? loginUser(enteredEmail, enteredPassword)
+          : createUser(enteredEmail, enteredPassword));
+        console.log("Login/Create User result:", result);
+        router.push("/dashboard");
+        console.log("Redirecting to dashboard");
+      } catch (error) {
+        console.error("Error during login/signup:", error.message);
+      }
     } else {
       try {
         const result = await createUser(enteredEmail, enteredPassword);
         console.log(result);
+        setMessage("Account created successfully! Please log in.");
+        setIsLogin(true);
       } catch (error) {
-        console.log(error.message); // This will log the error message to the console
-        // alert(error.message);
+        console.log(error.message);
+        setError(error.message);
       }
     }
   }
+
   function switchAuthModeHandler() {
     setIsLogin((prevState) => !prevState);
+    setMessage(""); // Clear the message
+    setError(""); // Clear the error
   }
 
   return (
@@ -47,6 +80,8 @@ function AuthForm() {
           <h1 className="text-3xl font-semibold mb-4">
             {isLogin ? "Login" : "Sign Up"}
           </h1>
+          {message && <div className="mb-4 text-green-600">{message}</div>}
+          {error && <div className="mb-4 text-red-600">{error}</div>}
           <form onSubmit={submitHandler} autoComplete="off">
             <div className="mb-4">
               <label
@@ -59,8 +94,8 @@ function AuthForm() {
                 type="email"
                 id="email"
                 required
-                className="mt-1 p-2 focus:outline-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-slate-800"
                 ref={emailInputRef}
+                className="mt-1 p-2 focus:outline-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-slate-800"
               />
             </div>
             <div className="mb-4">
@@ -74,8 +109,8 @@ function AuthForm() {
                 type="password"
                 id="password"
                 required
-                className="mt-1 p-2 focus:outline-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-slate-800"
                 ref={passwordInputRef}
+                className="mt-1 p-2 focus:outline-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-slate-800"
               />
             </div>
             <button className="w-full bg-indigo-500 text-white font-semibold py-2 px-4 rounded-md">

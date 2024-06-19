@@ -9,60 +9,91 @@ import {
   DocumentDuplicateIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { verifyToken } from "./utils/auth";
+import nookies from "nookies";
+import JobHunt from "./components/jobHunt";
+import NewsFeed from "./components/news";
+export async function getServerSideProps(context) {
+  const cookies = nookies.get(context);
+  const token = cookies.token;
 
-function classNames(...classes) {
+  if (!token) {
+    return {
+      redirect: {
+        destination: "/authform",
+        permanent: false,
+      },
+    };
+  }
+  const tokenValid = verifyToken(token);
+  if (!tokenValid) {
+    return {
+      redirect: {
+        destination: "/authform",
+        permanent: false,
+      },
+    };
+  }
+  return { props: {} };
+}
+
+export function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 // Placeholder components for each tab's content
-const DashboardContent = () => (
+const WelcomeContent = () => (
   <div>
-    <h1>Dashboard Content</h1>
+    <h1>Welcome Content</h1>
   </div>
 );
-const ExpensesContent = () => <div>Expenses Content</div>;
-const RevenueContent = () => <div>Revenue Content</div>;
-const CashFlowContent = () => <div>Cash Flow Content</div>;
-const TaxesContent = () => <div>Taxes Content</div>;
-const CustomContent = () => <div>Custom Content</div>;
-const SettingsContent = () => <div>Settings Content</div>;
-const FeedBackContent = () => <div>Feedback Content</div>;
+const JobHuntContent = () => (
+  <div>
+    <JobHunt />
+  </div>
+);
+const OpportunitiesContent = () => <div>Opportunities Content</div>;
+const NewsContent = () => (
+  <div>
+    <NewsFeed />
+  </div>
+);
+const CommunityContent = () => <div>Community Content</div>;
+const ResourcesContent = () => <div>Resources Content</div>;
+const FeedbackContent = () => <div>Feedback Content</div>;
 
 const navigation = [
-  { name: "Dashboard", icon: HomeIcon },
-  { name: "Expenses", icon: FolderIcon },
-  { name: "Revenue", icon: DocumentDuplicateIcon },
-  { name: "Cash Flow", icon: ChartPieIcon },
-  { name: "Taxes", icon: Cog6ToothIcon },
-  { name: "Custom", icon: Cog6ToothIcon },
-  { name: "Settings", icon: ChartPieIcon },
+  { name: "Welcome", icon: HomeIcon },
+  { name: "Job Hunt", icon: FolderIcon },
+  { name: "Opportunities", icon: DocumentDuplicateIcon },
+  { name: "News", icon: DocumentDuplicateIcon },
+  { name: "Community", icon: ChartPieIcon },
+  { name: "Resources", icon: ChartPieIcon },
   { name: "Feedback", icon: Cog6ToothIcon },
 ];
 
-export default function Example() {
+export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("Dashboard");
+  const [activeTab, setActiveTab] = useState("Welcome");
 
   const renderContent = () => {
     switch (activeTab) {
-      case "Dashboard":
-        return <DashboardContent />;
-      case "Expenses":
-        return <ExpensesContent />;
-      case "Revenue":
-        return <RevenueContent />;
-      case "Cash Flow":
-        return <CashFlowContent />;
-      case "Taxes":
-        return <TaxesContent />;
-      case "Custom":
-        return <CustomContent />;
-      case "Settings":
-        return <SettingsContent />;
+      case "Welcome":
+        return <WelcomeContent />;
+      case "Job Hunt":
+        return <JobHuntContent />;
+      case "Opportunities":
+        return <OpportunitiesContent />;
+      case "News":
+        return <NewsContent />;
+      case "Community":
+        return <CommunityContent />;
+      case "Resources":
+        return <ResourcesContent />;
       case "Feedback":
-        return <FeedBackContent />;
+        return <FeedbackContent />;
       default:
-        return <DashboardContent />;
+        return <WelcomeContent />;
     }
   };
 
