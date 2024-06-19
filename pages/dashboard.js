@@ -13,6 +13,11 @@ import { verifyToken } from "./utils/auth";
 import nookies from "nookies";
 import JobHunt from "./components/jobHunt";
 import NewsFeed from "./components/news";
+import CommunityPage from "./components/communityPage";
+import ResourcesPage from "./components/resourcePage";
+import FeedbackForm from "./components/feedback";
+import Opportunities from "./components/opportunities";
+import WelcomePage from "./components/welcome";
 export async function getServerSideProps(context) {
   const cookies = nookies.get(context);
   const token = cookies.token;
@@ -44,7 +49,9 @@ export function classNames(...classes) {
 // Placeholder components for each tab's content
 const WelcomeContent = () => (
   <div>
-    <h1>Welcome Content</h1>
+    <h1>
+      <WelcomePage />
+    </h1>
   </div>
 );
 const JobHuntContent = () => (
@@ -52,15 +59,31 @@ const JobHuntContent = () => (
     <JobHunt />
   </div>
 );
-const OpportunitiesContent = () => <div>Opportunities Content</div>;
+const OpportunitiesContent = () => (
+  <div>
+    <Opportunities />
+  </div>
+);
 const NewsContent = () => (
   <div>
     <NewsFeed />
   </div>
 );
-const CommunityContent = () => <div>Community Content</div>;
-const ResourcesContent = () => <div>Resources Content</div>;
-const FeedbackContent = () => <div>Feedback Content</div>;
+const CommunityContent = () => (
+  <div>
+    <CommunityPage />
+  </div>
+);
+const ResourcesContent = () => (
+  <div>
+    <ResourcesPage />
+  </div>
+);
+const FeedbackContent = () => (
+  <div>
+    <FeedbackForm />
+  </div>
+);
 
 const navigation = [
   { name: "Welcome", icon: HomeIcon },

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import NewsItem from "./newsHelpers/newsItems"; // Ensure path is correct
-import Pagination from "./newsHelpers/pagination"; // Ensure path is correct
+import Pagination from "./newsHelpers/pagination.js"; // Ensure path is correct
 
 const NewsFeed = () => {
   const [news, setNews] = useState([]);
@@ -19,8 +19,8 @@ const NewsFeed = () => {
         );
         if (!response.ok) throw new Error("Failed to fetch news");
         const data = await response.json();
-        setNews(data.data || []); // Added fallback to an empty array
-        setTotalNews(data.data ? data.data.length : 0); // Set to 0 if data.data is undefined
+        setNews(data.news || []); // Added fallback to an empty array
+        setTotalNews(data.news ? data.news.length : 0); // Set to 0 if data.data is undefined
       } catch (error) {
         setError(error.message);
       } finally {
@@ -30,7 +30,6 @@ const NewsFeed = () => {
 
     fetchNews();
   }, [currentPage, newsPerPage]);
-
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
@@ -42,7 +41,7 @@ const NewsFeed = () => {
       ) : (
         <div className="space-y-4">
           {news.map((newss) => (
-            <NewsItem key={newss._id} newss={newss} />
+            <NewsItem key={newss._id} news={newss} />
           ))}
           <Pagination
             currentPage={currentPage}
