@@ -124,14 +124,18 @@ export default function MentorMe() {
               Everything Tech
             </h1>
             <p className="mt-6 text-lg leading-8 text-gray-600">
-              MentorMe is a dynamic platform designed to bridge the gap between
-              experienced professionals and emerging talents across various
-              fields. We facilitate meaningful connections that empower
-              individuals to build their skills, whether through CV enhancement,
-              collaborative projects, peer programming, or one-on-one mentoring.
-              Our mission is to unlock potential and foster professional growth
-              by providing a supportive community where knowledge and
-              experiences are shared freely and enthusiastically.
+              Everything Tech is an all-encompassing platform dedicated to
+              empowering individuals passionate about technology. Our mission is
+              to provide up-to-date resources, career opportunities, learning
+              materials, and a vibrant community, all in one place. We help tech
+              enthusiasts stay ahead with the latest news, dive deep into coding
+              with our extensive resource library, and connect with promising
+              opportunities in the tech industry. Whether you&apos;re looking
+              for your next job, seeking to enhance your skills, or searching
+              for a community to share ideas and collaborate on projects,
+              Everything Tech is your go-to hub for all things tech. Our goal is
+              to inspire continuous learning and professional growth in a
+              supportive environment where technology professionals can thrive.
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Link href="/dashboard" passHref>

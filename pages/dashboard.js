@@ -46,7 +46,6 @@ export function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-// Placeholder components for each tab's content
 const WelcomeContent = () => (
   <div>
     <h1>

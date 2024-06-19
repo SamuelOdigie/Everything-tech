@@ -16,7 +16,7 @@ const WelcomePage = () => {
         </p>
         <div className="inline-block shadow-xl rounded-lg overflow-hidden">
           <video controls className="w-full" style={{ maxHeight: "450px" }}>
-            <source src="path/to/your-demo-video.mp4" type="video/mp4" />
+            <source src="tutorial" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
         </div>
