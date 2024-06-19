@@ -61,22 +61,32 @@ async function runNewsFetchAndStore() {
     console.error("Error during news data fetch and storage:", error);
   }
 }
-
 export default async function handler(req, res) {
   if (req.method === "GET") {
     try {
-      await runNewsFetchAndStore();
-      res.status(200).json({
-        message:
-          "News data fetching triggered manually and processed successfully.",
-      });
+      const { page = 1, limit = 5 } = req.query;
+      const { db } = await connectToDatabase();
+      const newsCollection = db.collection("news");
+
+      // Calculate the total number of documents
+      const count = await newsCollection.countDocuments();
+
+      // Fetching data from MongoDB with pagination and sorting by date descending
+      const news = await newsCollection
+        .find({})
+        .sort({
+          published_datetime_utc: -1,
+        })
+        .skip((parseInt(page) - 1) * parseInt(limit))
+        .limit(parseInt(limit))
+        .toArray();
+
+      res.status(200).json({ news, count });
     } catch (error) {
-      res.status(500).json({
-        message: "Failed to fetch and store news data",
-        error: error.toString(),
-      });
+      res.status(500).json({ message: "Server Error", error: error.message });
     }
   } else {
-    res.status(405).json({ message: "Method Not Allowed" });
+    res.setHeader("Allow", ["GET"]);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }

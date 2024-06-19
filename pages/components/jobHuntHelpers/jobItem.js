@@ -5,7 +5,9 @@ const JobItem = ({ job }) => {
       <h3 className="font-semibold">{job.company.name}</h3>
       <p className="text-gray-700">{job.location}</p>
       <p className="text-green-700">{job.benefits}</p>
-      <p className="text-gray-700 ">{job.postAt}</p>
+      <p className="text-gray-700 ">
+        {new Date(job.postAt).toLocaleDateString()}
+      </p>
       <a
         href={job.url}
         target="_blank"
