@@ -1,5 +1,6 @@
-import { connectToDatabase } from "@/pages/lib/db";
-import { hashPassword } from "@/pages/lib/auth";
+import { connectToDatabase } from "@/pages/api/db";
+// import { hashPassword } from "@/pages/lib/auth";
+import bcrypt from "bcryptjs";
 
 async function signupHandler(req, res) {
   if (req.method !== "POST") {
@@ -30,7 +31,8 @@ async function signupHandler(req, res) {
       return;
     }
 
-    const hashedPassword = await hashPassword(password);
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
     const result = await db
       .collection("users")

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 const CommunityPage = () => {
@@ -15,10 +16,12 @@ const CommunityPage = () => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <img
+          <Image
+          width={160}
+          height={30}
             src="https://cdn.prod.website-files.com/6257adef93867e50d84d30e2/636e0b5061df29d55a92d945_full_logo_blurple_RGB.svg"
             alt="Join Discord"
-            className="w-40 mx-auto"
+            className="mx-auto"
           />
           <div className="text-blue-500 hover:text-blue-700 font-bold">
             Click Here to Join Now!
@@ -60,10 +63,12 @@ const CommunityPage = () => {
       </div>
       <section className="text-center mb-12">
         <h2 className="text-2xl font-bold mb-6">See Discord in Action</h2>
-        <img
+        <Image
+        width={350}
+        height={200}
           src="https://support.discord.com/hc/article_attachments/11475724079383"
           alt="Discord Interface"
-          className="mx-auto max-w-xlg h-auto"
+          className="mx-auto max-w-lg h-auto"
           style={{ width: "50%" }}
         />
       </section>
@@ -73,7 +78,7 @@ const CommunityPage = () => {
           Become a Part of Something Bigger
         </h2>
         <p className="text-center text-gray-700 mb-6">
-          Don’t miss out on the opportunity to grow personally and
+          Don`t miss out on the opportunity to grow personally and
           professionally. Join us today and start engaging with a global
           community!
         </p>
@@ -83,7 +88,9 @@ const CommunityPage = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img
+            <Image
+            width={160}
+            height={30}
               src="https://cdn.prod.website-files.com/6257adef93867e50d84d30e2/636e0b5061df29d55a92d945_full_logo_blurple_RGB.svg"
               alt="Sign Up for Discord"
               className="w-40 mx-auto"
