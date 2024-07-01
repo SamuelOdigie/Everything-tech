@@ -11,7 +11,7 @@ import {
 } from "@heroicons/react/24/outline";
 // import { verifyToken } from "./utils/auth";
 import jwt from "jsonwebtoken";
-import nookies from "nookies";
+// import nookies from "nookies";
 import JobHunt from "./components/jobHunt";
 import NewsFeed from "./components/news";
 import CommunityPage from "./components/communityPage";
@@ -19,29 +19,29 @@ import ResourcesPage from "./components/resourcePage";
 import FeedbackForm from "./components/feedback";
 import Opportunities from "./components/opportunities";
 import WelcomePage from "./components/welcome";
-export async function getServerSideProps(context) {
-  const cookies = nookies.get(context);
-  const token = cookies.token;
+// export async function getServerSideProps(context) {
+//   const cookies = nookies.get(context);
+//   const token = cookies.token;
 
-  if (!token) {
-    return {
-      redirect: {
-        destination: "/authform",
-        permanent: false,
-      },
-    };
-  }
-  const tokenValid = jwt.verify(token, process.env.JWT_Secret);
-  if (!tokenValid) {
-    return {
-      redirect: {
-        destination: "/authform",
-        permanent: false,
-      },
-    };
-  }
-  return { props: {} };
-}
+//   if (!token) {
+//     return {
+//       redirect: {
+//         destination: "/authform",
+//         permanent: false,
+//       },
+//     };
+//   }
+//   const tokenValid = jwt.verify(token, process.env.JWT_Secret);
+//   if (!tokenValid) {
+//     return {
+//       redirect: {
+//         destination: "/authform",
+//         permanent: false,
+//       },
+//     };
+//   }
+//   return { props: {} };
+// }
 
 export function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
