@@ -1,4 +1,3 @@
-import Image from "next/image";
 import React from "react";
 
 const opportunities = [
@@ -53,7 +52,7 @@ const Opportunities = () => {
           >
             <div className="md:flex">
               <div className="md:flex-shrink-0">
-                <Image
+                <img
                   height={192}
                   width={192}
                   src={opportunity.imgUrl}

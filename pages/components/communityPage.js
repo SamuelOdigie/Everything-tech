@@ -1,4 +1,3 @@
-import Image from "next/image";
 import React from "react";
 
 const CommunityPage = () => {
@@ -16,9 +15,9 @@ const CommunityPage = () => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <Image
-          width={160}
-          height={30}
+          <img
+            width={160}
+            height={30}
             src="https://cdn.prod.website-files.com/6257adef93867e50d84d30e2/636e0b5061df29d55a92d945_full_logo_blurple_RGB.svg"
             alt="Join Discord"
             className="mx-auto"
@@ -63,9 +62,9 @@ const CommunityPage = () => {
       </div>
       <section className="text-center mb-12">
         <h2 className="text-2xl font-bold mb-6">See Discord in Action</h2>
-        <Image
-        width={350}
-        height={200}
+        <img
+          width={350}
+          height={200}
           src="https://support.discord.com/hc/article_attachments/11475724079383"
           alt="Discord Interface"
           className="mx-auto max-w-lg h-auto"
@@ -88,9 +87,9 @@ const CommunityPage = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Image
-            width={160}
-            height={30}
+            <img
+              width={160}
+              height={30}
               src="https://cdn.prod.website-files.com/6257adef93867e50d84d30e2/636e0b5061df29d55a92d945_full_logo_blurple_RGB.svg"
               alt="Sign Up for Discord"
               className="w-40 mx-auto"

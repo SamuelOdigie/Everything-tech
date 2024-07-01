@@ -1,6 +1,5 @@
 import { useState, useRef } from "react";
 import { useRouter } from "next/router";
-import Image from "next/image";
 
 async function createUser(email, password) {
   const res = await fetch("/api/auth/signup", {
@@ -128,7 +127,7 @@ function AuthForm() {
         </div>
       </div>
       <div className="hidden lg:block relative w-1/2 bg-gray-200">
-        <Image
+        <img
           fill
           className="absolute inset-0 w-full h-full object-cover"
           src="https://www.citma.org.uk/static/4b1fdf5f-0a2c-4b04-b69584bb17e33367/790x526_highestperformance__4a7c7e45a350/Mentoring.jpg"
