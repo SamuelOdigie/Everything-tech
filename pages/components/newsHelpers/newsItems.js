@@ -1,7 +1,9 @@
+import Image from "next/image";
+
 const NewsItem = ({ news }) => {
   return (
     <div className="p-4 border rounded shadow flex">
-      <img
+      <Image
         src={news?.photo_url}
         alt="News"
         width={40}

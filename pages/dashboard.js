@@ -9,7 +9,8 @@ import {
   DocumentDuplicateIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { verifyToken } from "./utils/auth";
+// import { verifyToken } from "./utils/auth";
+import jwt from "jsonwebtoken";
 import nookies from "nookies";
 import JobHunt from "./components/jobHunt";
 import NewsFeed from "./components/news";
@@ -30,7 +31,7 @@ export async function getServerSideProps(context) {
       },
     };
   }
-  const tokenValid = verifyToken(token);
+  const tokenValid = jwt.verify(token, process.env.JWT_Secret);
   if (!tokenValid) {
     return {
       redirect: {

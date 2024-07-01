@@ -1,4 +1,4 @@
-import { connectToDatabase } from "@/pages/lib/db";
+import { connectToDatabase } from "@/pages/api/db";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 export default async function handler(req, res) {

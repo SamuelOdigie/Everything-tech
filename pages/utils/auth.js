@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-export const verifyToken = (token) => {
+const verifyToken = (token) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_Secret);
     console.log("jwt verified", decoded);
@@ -9,3 +9,4 @@ export const verifyToken = (token) => {
     return null;
   }
 };
+export default verifyToken;

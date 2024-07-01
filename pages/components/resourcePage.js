@@ -1,7 +1,7 @@
 // pages/ResourcesPage.js
 import React, { useState } from "react";
 import DropdownSelector from "./dropdownSelector"; // Adjust path as needed
-import techResources from "./resourceData/techResources"; // Adjust path as needed
+import techResources from "../api/resourceData/techResources"; // Adjust path as needed
 
 const ResourcesPage = () => {
   const [selectedCategory, setSelectedCategory] = useState("frontend");

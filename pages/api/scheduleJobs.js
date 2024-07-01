@@ -1,5 +1,5 @@
 import fetch from "node-fetch";
-import { connectToDatabase } from "@/pages/lib/db";
+import { connectToDatabase } from "@/pages/api/db";
 
 // Fetch job data from API
 async function fetchJobData() {

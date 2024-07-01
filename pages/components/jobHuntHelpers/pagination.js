@@ -5,13 +5,13 @@ const Pagination = ({ currentPage, jobsPerPage, totalJobs, paginate }) => {
     pageNumbers.push(i);
   }
 
-  console.log("Current Page:", currentPage); // Debug: Check current page value
+  // console.log("Current Page:", currentPage); // Debug: Check current page value
 
   return (
     <nav>
       <ul className="flex justify-center space-x-2 mt-4">
         {pageNumbers.map((number) => {
-          console.log("Page Number:", number); // Debug: Check page number in the loop
+          // console.log("Page Number:", number); // Debug: Check page number in the loop
           return (
             <li
               key={number}

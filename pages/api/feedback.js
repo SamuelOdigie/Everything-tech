@@ -1,4 +1,4 @@
-import { connectToDatabase } from "@/pages/lib/db"; // Adjust this import based on your project setup
+import { connectToDatabase } from "@/pages/api/db"; // Adjust this import based on your project setup
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
@@ -12,12 +12,10 @@ export default async function handler(req, res) {
         createdAt: new Date(),
       });
 
-      res
-        .status(201)
-        .json({
-          message: "Feedback submitted successfully",
-          id: feedback.insertedId,
-        });
+      res.status(201).json({
+        message: "Feedback submitted successfully",
+        id: feedback.insertedId,
+      });
     } catch (error) {
       res
         .status(500)

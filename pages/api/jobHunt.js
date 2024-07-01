@@ -1,4 +1,4 @@
-import { connectToDatabase } from "@/pages/lib/db"; // Adjust the path as necessary
+import { connectToDatabase } from "@/pages/api/db"; // Adjust the path as necessary
 
 async function handler(req, res) {
   if (req.method === "GET") {
