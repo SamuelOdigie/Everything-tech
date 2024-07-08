@@ -10,8 +10,8 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 // import { verifyToken } from "./utils/auth";
-import jwt from "jsonwebtoken";
-import nookies from "nookies";
+//import jwt from "jsonwebtoken";
+// import nookies from "nookies";
 import JobHunt from "./components/jobHunt";
 import NewsFeed from "./components/news";
 import CommunityPage from "./components/communityPage";
